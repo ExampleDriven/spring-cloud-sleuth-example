@@ -1,9 +1,11 @@
+[![Build Status](https://travis-ci.org/ExampleDriven/spring-cloud-sleuth-example.svg)](https://travis-ci.org/ExampleDriven/spring-cloud-sleuth-example)
 # Spring cloud sleuth example
 
 Start up all modules using 
 
+```shell
    mvn spring-boot:run
-   
+```   
 then hit
 
 http://localhost:8080/1007?port=8090
