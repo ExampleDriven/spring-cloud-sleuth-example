@@ -1,8 +1,10 @@
 package org.exampledriven.sleuth.rest;
 
-import org.apache.catalina.servlet4preview.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.sleuth.Span;
+import org.springframework.cloud.sleuth.Tracer;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -13,20 +15,42 @@ import java.util.Date;
 @RestController
 public class SleepController {
 
-    Logger logger = LoggerFactory.getLogger(SleepController.class);
+    private Logger logger = LoggerFactory.getLogger(SleepController.class);
+
+    @Autowired
+    private Tracer tracer;
 
     @RequestMapping(value = "/sleep", method = RequestMethod.POST)
-    public SleepResponse test(@RequestBody SleepRequest sleepRequest) {
+    public SleepResponse sleep(@RequestBody SleepRequest sleepRequest) {
 
-        try {
-            Thread.sleep(sleepRequest.getSleepInMillis());
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+        logger.info(sleepRequest.getMessage());
 
-        logger.debug(sleepRequest.getMessage());
+        sleep(sleepRequest.getSleepInMillis() / 2);
+        sleep(sleepRequest.getSleepInMillis() / 2);
 
         return new SleepResponse(sleepRequest.getMessage(), new Date());
+
+    }
+
+    private void sleep(int sleepInMillis) {
+
+        Span span = tracer.createSpan("This span was created programmatically, sleep " + sleepInMillis);
+
+        try {
+
+            span.tag("sleepInMillis", "" + sleepInMillis);
+            logger.info("sleepInMillis " + sleepInMillis);
+
+            try {
+                Thread.sleep(sleepInMillis);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+        } finally {
+            tracer.close(span);
+        }
+
 
     }
 

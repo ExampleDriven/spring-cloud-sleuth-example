@@ -1,6 +1,13 @@
 [![Build Status](https://travis-ci.org/ExampleDriven/spring-cloud-sleuth-example.svg)](https://travis-ci.org/ExampleDriven/spring-cloud-sleuth-example)
 # Spring cloud sleuth example
 
+This example demonstrates the following features
+- Programatically create spans
+- set sampling rate
+- Zipkin via HTTP
+- RestTemplate integration
+- Creating a custom filter that adds tags to the current span 
+
 Start up all modules using 
 
 ```shell
